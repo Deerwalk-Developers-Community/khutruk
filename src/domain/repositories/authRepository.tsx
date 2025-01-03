@@ -34,6 +34,6 @@ export const login = async (credentials: AuthCredentials) => {
   return fetchAuth(`${BASE_API_URL}/auth/login`, credentials);
 };
 
-export const register = async (credentials: AuthCredentials) => {
+export const signup = async (credentials: AuthCredentials) => {
   return fetchAuth(`${BASE_API_URL}/auth/register`, credentials);
 };

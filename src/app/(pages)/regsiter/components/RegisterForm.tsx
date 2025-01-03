@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { signup } from "@/domain/repositories/authRepository";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,10 +18,21 @@ const RegisterForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormInputs>();
-  const onSubmit: SubmitHandler<RegisterFormInputs> = () => {
+  const onSubmit: SubmitHandler<RegisterFormInputs> = async (
+    data: RegisterFormInputs
+  ) => {
+    try {
+      const token = await signup({
+        email: data.email,
+        password: data.password,
+      });
+      window.localStorage.setItem("user", token);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
     console.log("pass");
     toast({
-      title: "Registered successfully...",
+      title: "Logged in successfully...",
     });
   };
   return (

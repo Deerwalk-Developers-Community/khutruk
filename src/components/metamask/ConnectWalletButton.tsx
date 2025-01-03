@@ -10,6 +10,9 @@ const ConnectWalletButton = () => {
   const { sdk, connected, connecting, account } = useSDK();
   const [hasSentToBackend, setHasSentToBackend] = useState(false);
 
+  useEffect(() => {
+    console.log("connet" + connected);
+  }, []);
   const connect = async () => {
     try {
       await sdk?.connect();
