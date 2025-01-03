@@ -22,7 +22,7 @@ const fetchAuth = async (
       throw new Error("Failed");
     }
     const data = await response.json();
-    console.log(data);
+    console.log(data.access_token);
     return data;
   } catch (error) {
     console.error("Error occured: ", error);
