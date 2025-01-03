@@ -23,7 +23,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const jwt = require("jsonwebtoken");
     const token = jwt.sign(
       { id: user?.id, walletAddress: user?.walletAddress },
