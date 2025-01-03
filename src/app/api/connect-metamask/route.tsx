@@ -17,12 +17,13 @@ export async function POST(req: Request) {
       );
     }
 
-    let user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         walletAddress,
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const jwt = require("jsonwebtoken");
     const token = jwt.sign(
       { id: user?.id, walletAddress: user?.walletAddress },
