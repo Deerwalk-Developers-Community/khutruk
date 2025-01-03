@@ -23,6 +23,7 @@ const Page = () => {
 
       const upload = await pinata.upload.file(file);
       console.log(upload);
+      const url = "https://gateway.pinata/cloud/ipfs/" + upload.IpfsHash;
     } catch (err) {
       console.error("Error while uploading file", err);
     }
