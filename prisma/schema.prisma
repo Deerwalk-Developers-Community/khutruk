@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum CategoryTypes{
+enum CategoryTypes {
   ANIMAL
   EDUCATION
   MEDICAL
@@ -23,30 +23,80 @@ enum CategoryTypes{
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  walletAddress String    @unique
-  email         String    @unique
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  walletAddress String     @unique @map("wallet_address")
+  email         String     @unique
   name          String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
   campaigns     Campaign[]
+  donations     Donation[]
 }
 
 model Campaign {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  creatorId      String   @db.ObjectId
-  title          String
-  category       CategoryTypes 
-  description    String
-  campaignAddress String   @unique
-  targetAmount   Float
-  raisedAmount   Float     @default(0)
-  releasedAmount Float     @default(0)
-  status         String
-  startDate      DateTime
-  endDate        DateTime
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  creator        User      @relation(fields: [creatorId], references: [id])
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId       String        @map("creator_id") @db.ObjectId
+  title           String
+  description     String
+  category        CategoryTypes @map("campaign_category")
+  campaignAddress String        @unique @map("campaign_address")
+  targetAmount    Float         @map("target_amount")
+  raisedAmount    Float         @default(0) @map("raised_amount")
+  releasedAmount  Float         @default(0) @map("released_amount")
+  status          String
+  mediaUrls       Json          @map("media_urls")
+  startDate       DateTime      @map("start_date")
+  endDate         DateTime      @map("end_date")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  creator            User                @relation(fields: [creatorId], references: [id])
+  donations          Donation[]
+  withdrawalRequests WithdrawalRequest[]
+  transactions       Transaction[]
 }
 
+model Donation {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  campaignId      String   @map("campaign_id") @db.ObjectId
+  donorId         String   @map("donor_id") @db.ObjectId
+  amount          Float
+  currency        String
+  transactionHash String   @map("transaction_hash")
+  paymentMethod   String   @map("payment_method")
+  status          String
+  donationDate    DateTime @map("donation_date")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  donor    User     @relation(fields: [donorId], references: [id])
+}
+
+model WithdrawalRequest {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  campaignId      String    @map("campaign_id") @db.ObjectId
+  amount          Float
+  reason          String
+  status          String
+  transactionHash String    @map("transaction_hash")
+  requestDate     DateTime  @map("request_date")
+  approvalDate    DateTime? @map("approval_date")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model Transaction {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  campaignId     String?  @map("campaign_id") @db.ObjectId
+  // relatedId      String?  @map("related_id") @db.ObjectId
+  type           String
+  amount         Float
+  currency       String
+  blockchainHash String   @map("blockchain_hash")
+  status         String
+  metadata       Json
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  campaign Campaign? @relation(fields: [campaignId], references: [id])
+}
