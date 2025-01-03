@@ -54,7 +54,7 @@ const ConnectWalletButton = () => {
 
   return (
     <div>
-      {connected ? (
+      {account ? (
         <Popover>
           <PopoverTrigger>
             <Button>{formatAddress(account)}</Button>
