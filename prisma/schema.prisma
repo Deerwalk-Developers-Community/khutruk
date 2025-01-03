@@ -22,13 +22,12 @@ enum CategoryTypes {
   DISASTER
 }
 
-
 model User {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   password      String
-  email         String     @unique 
-  walletAddress String?     @unique @map("wallet_address")
+  email         String     @unique
+  walletAddress String?    @unique @map("wallet_address")
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
   campaigns     Campaign[]
@@ -46,7 +45,7 @@ model Campaign {
   raisedAmount    Float         @default(0) @map("raised_amount")
   releasedAmount  Float         @default(0) @map("released_amount")
   status          String
-  mediaUrls       String          @map("media_urls")
+  mediaUrls       String        @map("media_urls")
   startDate       DateTime      @map("start_date")
   endDate         DateTime      @map("end_date")
   createdAt       DateTime      @default(now()) @map("created_at")
@@ -102,4 +101,3 @@ model Transaction {
 
   campaign Campaign? @relation(fields: [campaignId], references: [id])
 }
-

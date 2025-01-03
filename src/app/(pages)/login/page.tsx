@@ -12,7 +12,7 @@ const LoginPage = () => {
           <p>
             New to Khutruke?
             <span className="text-pink">
-              <Link href={"/regsiter"}> Create an Account</Link>
+              <Link href={"/register"}> Create an Account</Link>
             </span>
           </p>
         </div>
