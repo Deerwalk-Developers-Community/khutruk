@@ -5,22 +5,22 @@ import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type LoginFormInputs = {
+type RegisterFormInputs = {
   email: string;
   password: string;
 };
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>();
-  const onSubmit: SubmitHandler<LoginFormInputs> = () => {
+  } = useForm<RegisterFormInputs>();
+  const onSubmit: SubmitHandler<RegisterFormInputs> = () => {
     console.log("pass");
     toast({
-      title: "Logged in successfully...",
+      title: "Registered successfully...",
     });
   };
   return (
@@ -69,11 +69,11 @@ const LoginForm = () => {
           disabled={isSubmitting}
           className="bg-green hover:bg-green hover:opacity-80"
         >
-          {isSubmitting ? "Logging In..." : "Log In"}
+          {isSubmitting ? "Registering..." : "Register"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
