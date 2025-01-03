@@ -22,14 +22,23 @@ enum CategoryTypes {
   DISASTER
 }
 
-model User {
+model Auth{
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  walletAddress String?     @unique @map("wallet_address")
-  email         String     @unique
   name          String
   password      String
+  email         String     @unique 
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
+  users         User[]
+}
+
+model User {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  authid        String     @map("auth_id") @db.ObjectId    
+  walletAddress String?     @unique @map("wallet_address")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  auth          Auth       @relation(fields: [authid], references: [id])  
   campaigns     Campaign[]
   donations     Donation[]
 }
@@ -101,3 +110,4 @@ model Transaction {
 
   campaign Campaign? @relation(fields: [campaignId], references: [id])
 }
+
