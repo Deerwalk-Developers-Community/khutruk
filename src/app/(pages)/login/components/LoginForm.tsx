@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { login } from "@/domain/repositories/authRepository";
 import { useToast } from "@/hooks/use-toast";
+import Link  from "next/link";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -15,28 +16,26 @@ const LoginForm = () => {
   const { toast } = useToast();
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormInputs>();
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = async (
-    data: LoginFormInputs
-  ) => {
-    try {
-      const token = await login({ email: data.email, password: data.password });
-      window.localStorage.setItem("user", token);
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-    console.log("pass");
-    toast({
-      title: "Logged in successfully...",
-    });
-  };
+  // const onSubmit: SubmitHandler<LoginFormInputs> = async (
+  //   data: LoginFormInputs
+  // ) => {
+  //   try {
+  //     const token = await login({ email: data.email, password: data.password });
+  //     window.localStorage.setItem("user", token);
+  //   } catch (error) {
+  //     console.error("Error: ", error);
+  //   }
+  //   console.log("pass");
+  //   toast({
+  //     title: "Logged in successfully...",
+  //   });
+  // };
   return (
     <div>
       <form
-        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-5 w-80 border-2 p-5 rounded-md"
       >
         <div>
@@ -74,13 +73,15 @@ const LoginForm = () => {
           )}
         </div>
 
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-green hover:bg-green hover:opacity-80"
-        >
-          {isSubmitting ? "Logging In..." : "Log In"}
-        </Button>
+        <Link href="/api/auth/login">
+          <Button
+          
+            disabled={isSubmitting}
+            className="bg-green hover:bg-green hover:opacity-80"
+          >
+            {isSubmitting ? "Logging In..." : "Log In"}
+          </Button>
+        </Link>
       </form>
     </div>
   );
