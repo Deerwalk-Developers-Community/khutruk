@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DisasterRelifCampaignABI } from "@/AddressABI/DisasterRelifCampaign";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { createCampaign } from "@/services/campaign/createCampaign";
 import { getCampaign } from "@/services/campaign/getCampaign";
 import { contractAddress } from "@/AddressABI/contractAddress";
 import { Input } from "@/components/ui/input";
+import { BASE_API_URL } from "@/lib/constants";
 
 const Page = () => {
   const [campaignId, setCampaignId] = useState("");
@@ -83,6 +84,8 @@ const Page = () => {
       alert("MetaMask is not installed. Please install it to continue.");
     }
   };
+
+  
 
   return (
     <div className="flex flex-col gap-5">
