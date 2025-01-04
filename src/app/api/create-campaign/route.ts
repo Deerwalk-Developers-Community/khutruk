@@ -13,9 +13,7 @@ export async function POST(req: any){
               category: data.category,
               campaignAddress: data.campaignAddress,
               targetAmount: parseFloat(data.targetAmount),
-              startDate: new Date(data.startDate), 
-              endDate: new Date(data.endDate), 
-              status: data.status,
+              status : "PENDING",
               mediaUrls: data.mediaUrls,
             },
         });
