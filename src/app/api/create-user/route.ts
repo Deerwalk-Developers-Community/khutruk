@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
+import { uuidV4 } from "ethers";
+import { randomUUID } from "crypto";
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET as string;
@@ -19,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.create({
       data: {
-        walletAddress : email,
+        walletAddress : randomUUID(),
         email,
         name,
         password: hashedPassword,
