@@ -6,7 +6,7 @@ import { uuidV4 } from "ethers";
 import { randomUUID } from "crypto";
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET as string;
 
 
 export async function POST(req: NextRequest) {
