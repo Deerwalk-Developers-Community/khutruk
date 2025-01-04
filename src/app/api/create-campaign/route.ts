@@ -15,6 +15,8 @@ export async function POST(req: any) {
               targetAmount: parseFloat(data.targetAmount),
               status : "PENDING",
               mediaUrls: data.mediaUrls,
+              startDate: new Date(),
+              endDate: new Date()
             },
         });
 
