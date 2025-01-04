@@ -5,13 +5,15 @@ import { createCampaign } from "@/services/campaign/createCampaign";
 import { saveCampaignToBackend } from "@/domain/repositories/campaignRepository";
 import { pinata } from "@/utils/ipfsConfig";
 import { BASE_API_URL } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
+import { connectMetamask } from "@/hooks/connectMetamask";
 
 type User = {
   id: string;
   email: string;
   name: string;
   walletAddress: string;
-}
+};
 
 const CampaignForm = () => {
   const [user, setUser] = useState<User>();
@@ -24,7 +26,7 @@ const CampaignForm = () => {
     formState: { errors },
   } = useForm();
 
-  const token = localStorage.getItem("user")
+  const token = localStorage.getItem("user");
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -41,7 +43,7 @@ const CampaignForm = () => {
         }
 
         const data = await response.json();
-        setUser(data.user)
+        setUser(data.user);
         console.log(data.user);
       } catch (error) {
         console.error("Error: ", error);
@@ -104,8 +106,6 @@ const CampaignForm = () => {
 
   const handleBack = () => setStep((prevStep) => prevStep - 1);
 
-
-
   return (
     <div>
       <h1>Create a Campaign</h1>
@@ -163,7 +163,9 @@ const CampaignForm = () => {
                 })}
                 placeholder="Campaign description"
               />
-              {errors.description && <p>{errors.description.message as string}</p>}
+              {errors.description && (
+                <p>{errors.description.message as string}</p>
+              )}
 
               <label>Cover Image</label>
               <input
@@ -185,16 +187,20 @@ const CampaignForm = () => {
               <label>Target Amount</label>
               <input
                 type="number"
+                step="0.0001"
                 {...register("targetAmount", {
                   required: "Target amount is required",
                 })}
                 placeholder="Target amount in ETH"
               />
-              {errors.targetAmount && <p>{errors.targetAmount.message as string}</p>}
+              {errors.targetAmount && (
+                <p>{errors.targetAmount.message as string}</p>
+              )}
 
               <button type="button" onClick={handleBack}>
                 Back
               </button>
+
               <button type="submit">Submit</button>
             </div>
           )}
