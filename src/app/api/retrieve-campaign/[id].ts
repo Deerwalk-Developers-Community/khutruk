@@ -10,7 +10,8 @@ export async function GET(
   try {
     if (req.method === 'GET') {
         console.log("entry");     
-         const { id } = req.query;
+        const { id } = req.query;
+        console.log(id);
 
       if (!id || typeof id !== 'string') {
         return res.status(400).json({ error: 'Campaign ID is required and must be a string.' });
