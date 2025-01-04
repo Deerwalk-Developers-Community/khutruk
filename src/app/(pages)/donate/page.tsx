@@ -91,7 +91,7 @@ const Page = () => {
         <Button onClick={connectMetamask}>Connect MetaMask</Button>
         <Button onClick={connectContract}>Connect Contract</Button>
         <Button onClick={createCampaign}>Create Campaign</Button>
-        <Button onClick={() => getCampaign(27)}>Get Campaign</Button>
+        <Button onClick={() => getCampaign(32)}>Get Campaign</Button>
       </div>
 
       <div className="flex flex-col gap-3 mt-5">
