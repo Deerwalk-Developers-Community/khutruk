@@ -43,7 +43,7 @@ model User {
 model Campaign {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   creatorId       String        @map("creator_id") @db.ObjectId
-  sequenceId      Int           @unique @default(31) @map("sequence_id")
+  sequenceId      Int           @unique @default(40) @map("sequence_id")
   title           String
   description     String
   category        CategoryTypes @map("campaign_category")
@@ -69,9 +69,9 @@ model Donation {
   campaignId      String   @map("campaign_id") @db.ObjectId
   donorId         String   @map("donor_id") @db.ObjectId
   amount          Float
-  currency        String
+  currency        String?
   transactionHash String   @map("transaction_hash")
-  paymentMethod   String   @map("payment_method")
+  paymentMethod   String?  @map("payment_method")
   status          String
   donationDate    DateTime @map("donation_date")
   createdAt       DateTime @default(now()) @map("created_at")

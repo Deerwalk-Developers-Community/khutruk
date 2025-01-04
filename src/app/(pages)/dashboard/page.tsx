@@ -5,7 +5,7 @@ import Featured from "./components/featured";
 import { getCampaignData } from "@/domain/repositories/campaignRepository";
 import { useRouter } from "next/navigation";
 
-const Dashboard = () => {
+const Page = () => {
   const [data, setData] = useState<any[]>([]); // State to hold the campaign data
   const [loading, setLoading] = useState<boolean>(true); // State to manage loading state
   const router = useRouter();
@@ -17,6 +17,7 @@ const Dashboard = () => {
         const campaigns = await getCampaignData();
         setData(campaigns);
         setLoading(false);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching campaign data:", error);
         setLoading(false);
@@ -36,7 +37,7 @@ const Dashboard = () => {
       <div className="flex w-full h-full gap-10 pl-20 py-20">
         {/* Featured Campaign - Static Example */}
         <Featured
-          image="https://silver-selective-damselfly-558.mypinata.cloud/ipfs/bafybeieycpqyeyvv55v6hzb4zsg7v2ju3shcp2ahsli4ipfhsqiuabncqa"
+          image="https://gateway.pinata.cloud/ipfs/bafkreihtaaxlgne7l7mwulg252ybvucc2grqtigabue2m6xxg4cwm3euke"
           title="Education for underprivileged"
           raised="40,000"
           description="Monday through Friday our bus travels to four different villages. Starting with the first village, over two hours away, the bus picks up and brings the children to school before heading out to the next village (approximately 45 minutes away). It then repeats the process."
@@ -62,3 +63,5 @@ const Dashboard = () => {
     </div>
   );
 };
+
+export default Page;

@@ -29,7 +29,7 @@ const LoginForm = () => {
     try {
       const token = await login({ email: data.email, password: data.password });
       window.localStorage.setItem("user", token);
-      router.push('/dashboard')
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error: ", error);
     }
