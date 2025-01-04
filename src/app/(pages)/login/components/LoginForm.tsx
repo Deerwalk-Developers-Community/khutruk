@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { login } from "@/domain/repositories/authRepository";
 import { useToast } from "@/hooks/use-toast";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -12,6 +14,8 @@ type LoginFormInputs = {
 };
 
 const LoginForm = () => {
+  useAuthRedirect();
+  const router = useRouter();
   const { toast } = useToast();
   const {
     register,
@@ -25,6 +29,7 @@ const LoginForm = () => {
     try {
       const token = await login({ email: data.email, password: data.password });
       window.localStorage.setItem("user", token);
+      router.push('/dashboard')
     } catch (error) {
       console.error("Error: ", error);
     }
