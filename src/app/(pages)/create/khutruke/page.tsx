@@ -1,11 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createCampaign } from "@/services/campaign/createCampaign";
 import { saveCampaignToBackend } from "@/domain/repositories/campaignRepository";
 import { pinata } from "@/utils/ipfsConfig";
+import { BASE_API_URL } from "@/lib/constants";
+
+type User = {
+  id: string;
+  email: string;
+  name: string;
+  walletAddress: string;
+}
 
 const CampaignForm = () => {
+  const [user, setUser] = useState<User>();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [ipfsHash, setIpfsHash] = useState("");
@@ -14,6 +23,35 @@ const CampaignForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const token = localStorage.getItem("user")
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`${BASE_API_URL}retrieve-users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error fetching users: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setUser(data.user)
+        console.log(data.user);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    };
+
+    if (token) {
+      fetchPosts();
+    }
+  }, [token]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -50,6 +88,7 @@ const CampaignForm = () => {
       // Save campaign to backend
       const finalData = {
         ...data,
+        creatorId: user?.id,
         mediaUrls: ipfsHash,
         campaignAddress: blockchainResponse?.campaignAddress,
       };
@@ -64,6 +103,8 @@ const CampaignForm = () => {
   };
 
   const handleBack = () => setStep((prevStep) => prevStep - 1);
+
+
 
   return (
     <div>
