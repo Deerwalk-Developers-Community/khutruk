@@ -85,15 +85,13 @@ const Page = () => {
     }
   };
 
-  
-
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-row gap-5">
         <Button onClick={connectMetamask}>Connect MetaMask</Button>
         <Button onClick={connectContract}>Connect Contract</Button>
         <Button onClick={createCampaign}>Create Campaign</Button>
-        <Button onClick={() => getCampaign(16)}>Get Campaign</Button>
+        <Button onClick={() => getCampaign(27)}>Get Campaign</Button>
       </div>
 
       <div className="flex flex-col gap-3 mt-5">
