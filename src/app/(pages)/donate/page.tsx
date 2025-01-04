@@ -85,7 +85,7 @@ const DonationPage = () => {
       alert("Please provide both Campaign ID and Donation Amount.");
       return;
     }
-
+    connectContract();
     try {
       const res = await saveDonation(data);
       if (res) {

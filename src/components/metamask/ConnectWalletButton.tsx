@@ -10,15 +10,17 @@ const ConnectWalletButton = () => {
   const { sdk, connected, connecting, account } = useSDK();
   const [hasSentToBackend, setHasSentToBackend] = useState(false);
 
-  useEffect(() => {
-    console.log("connet" + connected);
-  }, []);
   const connect = async () => {
+    if (connecting) {
+      console.log("Already connecting. Please wait...");
+      return;
+    }
+
     try {
       await sdk?.connect();
-      console.log(account);
+      console.log("Connected Account:", account);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error connecting to wallet:", error);
     }
   };
 

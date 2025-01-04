@@ -59,12 +59,11 @@ const CampaignForm = () => {
       setLoading(true);
       try {
         const upload = await pinata.upload.file(file);
-        const url = "https://gateway.pinata/cloud/ipfs/" + upload.IpfsHash;
+        const url = "https://gateway.pinata.cloud/ipfs/" + upload.IpfsHash;
         setIpfsHash(url);
         console.log("Image uploaded successfully!");
       } catch (error) {
         console.error(error);
-        console.log("Failed to upload image.");
       } finally {
         setLoading(false);
       }

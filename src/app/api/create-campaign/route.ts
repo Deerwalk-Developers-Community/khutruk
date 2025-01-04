@@ -5,21 +5,8 @@ export async function POST(req: any) {
   try {
     const data = await req.json();
 
-    // Check if campaign with this address already exists
-    const existingCampaign = await prisma.campaign.findUnique({
-      where: {
-        campaignAddress: data.campaignAddress,
-      },
-    });
+    
 
-    if (existingCampaign) {
-      return new Response(
-        JSON.stringify({ 
-          message: "A campaign with this address already exists" 
-        }),
-        { status: 409 }
-      );
-    }
 
     const highestSequenceId = await prisma.campaign.findFirst({
       orderBy: {
@@ -29,7 +16,7 @@ export async function POST(req: any) {
         sequenceId: true,
       },
     });
-    const nextSequenceId = (highestSequenceId?.sequenceId ?? 31) + 1;
+    const nextSequenceId = (highestSequenceId?.sequenceId ?? 1001) + 1;
 
     const campaign = await prisma.campaign.create({
       data: {

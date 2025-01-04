@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
+  output: "standalone",
   images: {
-    domains: [
-      "gateway.pinata.cloud",
-      "silver-selective-damselfly-558.mypinata.cloud",
-    ],
+    domains: ["gateway.pinata.cloud"],
   },
 };
 
