@@ -90,7 +90,7 @@ const CampaignForm = () => {
                 <option value="KATHMANDU">Kathmandu</option>
                 <option value="POKHARA">Pokhara</option>
               </select>
-              {errors.location && <p>{errors.location.message}</p>}
+              {errors.location && <p>{errors.location.message as string}</p>}
 
               <label>Category</label>
               <select
@@ -100,7 +100,7 @@ const CampaignForm = () => {
                 <option value="EDUCATION">Education</option>
                 <option value="RELIGION">RELIGION</option>
               </select>
-              {errors.category && <p>{errors.category.message}</p>}
+              {errors.category && <p>{errors.category.message as string}</p>}
 
               <button type="submit">Next</button>
             </div>
@@ -113,7 +113,7 @@ const CampaignForm = () => {
                 {...register("title", { required: "Title is required" })}
                 placeholder="Campaign title"
               />
-              {errors.title && <p>{errors.title.message}</p>}
+              {errors.title && <p>{errors.title.message as string}</p>}
 
               <label>Description</label>
               <textarea
@@ -122,7 +122,7 @@ const CampaignForm = () => {
                 })}
                 placeholder="Campaign description"
               />
-              {errors.description && <p>{errors.description.message}</p>}
+              {errors.description && <p>{errors.description.message as string}</p>}
 
               <label>Cover Image</label>
               <input
@@ -149,7 +149,7 @@ const CampaignForm = () => {
                 })}
                 placeholder="Target amount in ETH"
               />
-              {errors.targetAmount && <p>{errors.targetAmount.message}</p>}
+              {errors.targetAmount && <p>{errors.targetAmount.message as string}</p>}
 
               <button type="button" onClick={handleBack}>
                 Back
