@@ -21,7 +21,7 @@ const Card = ({
   onClick, // Receive onClick as a prop
 }: Props) => {
   return (
-    <div className="w-60 h-fit flex flex-col">
+    <div className="w-60 h-fit flex flex-col cursor-pointer" onClick={onClick}>
       <Image
         src={image}
         width={500}
