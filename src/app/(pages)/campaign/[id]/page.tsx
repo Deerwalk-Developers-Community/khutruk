@@ -1,12 +1,14 @@
+// Campaign Details Page (page.tsx)
 "use client";
 import { useEffect, useState } from "react";
 import { getCampaign } from "@/domain/repositories/campaignRepository";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface Campaign {
   title: string;
   description: string;
   raised: number;
-  // Add other campaign properties as needed
 }
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -15,12 +17,15 @@ export default function Page({ params }: { params: { id: string } }) {
   const [error, setError] = useState<string | null>(null);
   const { id } = params;
 
+  const router = useRouter();
+
   useEffect(() => {
     const fetchCampaign = async () => {
       try {
         setLoading(true);
         const campaignData = await getCampaign(id);
         setCampaign(campaignData);
+        console.log(campaignData);
       } catch (error) {
         setError("Error fetching campaign");
       } finally {
@@ -32,6 +37,10 @@ export default function Page({ params }: { params: { id: string } }) {
       fetchCampaign();
     }
   }, [id]);
+
+  const handleDonateClick = () => {
+    router.push(`/donate?campaignId=${id}`);
+  };
 
   if (loading) {
     return (
@@ -57,6 +66,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <h2 className="text-xl font-semibold">{campaign.title}</h2>
           <p className="text-gray-600">{campaign.description}</p>
           <p className="font-medium">Rs.</p>
+          <Button onClick={handleDonateClick}>Donate Now</Button>
         </div>
       ) : (
         <div className="text-gray-500">Campaign not found</div>

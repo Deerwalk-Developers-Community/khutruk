@@ -21,10 +21,7 @@ const Card = ({
   onClick, // Receive onClick as a prop
 }: Props) => {
   return (
-    <div
-      className="w-60 h-fit flex flex-col border-2 rounded-xl cursor-pointer" // Add cursor-pointer to indicate it's clickable
-      onClick={onClick} // Attach the onClick handler
-    >
+    <div className="w-60 h-fit flex flex-col">
       <Image
         src={image}
         width={500}

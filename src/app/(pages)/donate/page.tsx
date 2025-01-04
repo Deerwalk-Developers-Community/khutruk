@@ -1,33 +1,27 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DisasterRelifCampaignABI } from "@/AddressABI/DisasterRelifCampaign";
 import { Button } from "@/components/ui/button";
-import { createCampaign } from "@/services/campaign/createCampaign";
-import { getCampaign } from "@/services/campaign/getCampaign";
-import { contractAddress } from "@/AddressABI/contractAddress";
 import { Input } from "@/components/ui/input";
-import { BASE_API_URL } from "@/lib/constants";
+import { contractAddress } from "@/AddressABI/contractAddress";
+import { useSearchParams } from "next/navigation";
 
-const Page = () => {
-  const [campaignId, setCampaignId] = useState("");
+const DonationPage = () => {
+  const searchParams = useSearchParams();
   const [donationAmount, setDonationAmount] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+  const [campaignId, setCampaignId] = useState("");
 
-  const connectMetamask = async () => {
-    if (typeof window !== "undefined" && window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        console.log("Connected account:", accounts[0]);
-      } catch (error) {
-        console.error("Error connecting to MetaMask:", error);
-      }
-    } else {
-      console.error("MetaMask is not installed");
+  useEffect(() => {
+    const id = searchParams.get("campaignId");
+    if (id) {
+      setCampaignId(id);
     }
-  };
+  }, [searchParams]);
+
+  const predefinedAmounts = ["100", "500", "1,000", "10,000"];
 
   const connectContract = async () => {
     if (typeof window !== "undefined" && window.ethereum) {
@@ -49,12 +43,30 @@ const Page = () => {
     }
   };
 
+  const connectMetamask = async () => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        setWalletAddress(accounts[0]);
+        setIsConnected(true);
+        console.log("Connected account:", accounts[0]);
+      } catch (error) {
+        console.error("Error connecting to MetaMask:", error);
+      }
+    } else {
+      console.error("MetaMask is not installed");
+    }
+  };
+
   const donateToCampaign = async () => {
     if (!campaignId || !donationAmount) {
       alert("Please provide both Campaign ID and Donation Amount.");
       return;
     }
 
+    connectContract();
     if (typeof window !== "undefined" && window.ethereum) {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
@@ -74,7 +86,6 @@ const Page = () => {
         console.log("Donation successful! Receipt:", receipt);
 
         alert("Thank you for your donation!");
-        setCampaignId("");
         setDonationAmount("");
       } catch (error: any) {
         console.error("Error during donation:", error);
@@ -86,32 +97,61 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-row gap-5">
-        <Button onClick={connectMetamask}>Connect MetaMask</Button>
-        <Button onClick={connectContract}>Connect Contract</Button>
-        <Button onClick={createCampaign}>Create Campaign</Button>
-        <Button onClick={() => getCampaign(32)}>Get Campaign</Button>
-      </div>
+    <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-[588px] h-[448px] bg-white p-6 rounded-md shadow-md">
+        <div className="w-[359px] mb-6 text-slate-900 text-sm font-normal font-['Inter'] leading-tight">
+          Your small support can make a big change to fight homelessness
+        </div>
 
-      <div className="flex flex-col gap-3 mt-5">
-        <h2>Donate to a Campaign</h2>
-        <Input
-          type="text"
-          placeholder="Enter Campaign ID"
-          value={campaignId}
-          onChange={(e) => setCampaignId(e.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Enter Donation Amount (ETH)"
-          value={donationAmount}
-          onChange={(e) => setDonationAmount(e.target.value)}
-        />
-        <Button onClick={donateToCampaign}>Donate</Button>
+        <div className="mb-4">
+          <div className="text-slate-900 text-sm font-medium font-['Inter'] leading-tight mb-2">
+            Enter your donation Amount
+          </div>
+          <div className="flex gap-2 mb-4">
+            {predefinedAmounts.map((amount) => (
+              <button
+                key={amount}
+                onClick={() => setDonationAmount(amount.replace(",", ""))}
+                className={`px-3 py-2 bg-white rounded-md border ${
+                  donationAmount === amount.replace(",", "")
+                    ? "border-[#21c55e]"
+                    : "border-slate-300"
+                } text-slate-900 text-sm font-normal font-['Inter'] leading-tight`}
+              >
+                RS.{amount}
+              </button>
+            ))}
+          </div>
+          <Input
+            type="text"
+            step="0.001"
+            value={donationAmount}
+            onChange={(e) => setDonationAmount(e.target.value)}
+            placeholder="Enter custom amount"
+            className="w-full pl-3 pr-14 py-2 bg-white rounded-md border border-slate-300"
+          />
+        </div>
+
+        <div className="mb-4">
+          <div className="text-slate-900 text-sm font-medium font-['Inter'] leading-tight mb-2">
+            Payment Method
+          </div>
+          <div className="w-full h-[33px] bg-white rounded-[9px] border border-slate-300 flex items-center px-3">
+            <div className="text-slate-400 text-sm font-medium font-['Inter'] leading-tight">
+              {isConnected ? walletAddress : "Connect MetaMask to donate"}
+            </div>
+          </div>
+        </div>
+
+        <Button
+          onClick={isConnected ? donateToCampaign : connectMetamask}
+          className="w-full h-10 px-4 py-2 bg-[#21c55e] rounded-md text-white text-sm font-medium font-['Inter'] leading-normal"
+        >
+          {isConnected ? "Donate Now" : "Connect MetaMask"}
+        </Button>
       </div>
     </div>
   );
 };
 
-export default Page;
+export default DonationPage;
