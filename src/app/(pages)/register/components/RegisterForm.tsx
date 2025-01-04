@@ -7,6 +7,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type RegisterFormInputs = {
+  name: string;
   email: string;
   password: string;
 };
@@ -23,6 +24,7 @@ const RegisterForm = () => {
   ) => {
     try {
       const token = await signup({
+        name: data.name,
         email: data.email,
         password: data.password,
       });
@@ -41,6 +43,19 @@ const RegisterForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-5 w-80 border-2 p-5 rounded-md"
       >
+      <div>
+          <label htmlFor="name">Name</label>
+          <Input
+            type="text"
+            placeholder="Name"
+            {...register("name", {
+              required: "Name is required",
+            })}
+          />
+          {errors.name && (
+            <p className="text-red text-sm">{errors.name.message}</p>
+          )}
+        </div>
         <div>
           <label htmlFor="email">Email</label>
           <Input

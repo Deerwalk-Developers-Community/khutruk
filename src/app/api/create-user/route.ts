@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,14 +19,19 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.create({
       data: {
-        walletAddress : "2",
+        walletAddress : email,
         email,
         name,
         password: hashedPassword,
       },
     });
 
-    return NextResponse.json({ message: "User created successfully" }, { status: 201 });
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+          expiresIn: "1h",
+        });
+    
+
+    return NextResponse.json({ message: "User created successfully", token }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
