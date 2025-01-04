@@ -1,37 +1,55 @@
 import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request) {
-  try {
-    const { walletAddress, signature, message } = await req.json();
+export async function POST(req: Request, response:Response) {
 
-    const recoveredAddress = ethers.verifyMessage(message, signature);
+    const { account} = await req.json();
 
-    if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
+    // // Verify the wallet address using the signature and message
+    // const recoveredAddress = ethers.verifyMessage(message, signature);
+
+    // if (recoveredAddress.toLowerCase() !== account.toLowerCase()) {
+    //   return NextResponse.json(
+    //     { error: "Signature Verification Failed" },
+    //     { status: 401 }
+    //   );
+    // }
+
+    // Extract token from Authorization header
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Missing or invalid token" }, { status: 401 });
+    }
+    const token = authHeader.split(" ")[1];
+    console.log(token)
+
+    // Decode the JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your_jwt_secret");
+
+    if (!decoded || typeof decoded !== "object" || !decoded.id) {
       return NextResponse.json(
-        { error: "Signature Verification Failed" },
+        { error: "Invalid or expired token" },
         { status: 401 }
       );
     }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        walletAddress,
-      },
+    console.log(account)
+    try {
+    // Update the user's wallet address
+    const updatedUser = await prisma.user.update({
+      where: { id: decoded.id },
+      data: { walletAddress: account },
     });
 
-    const jwt = require("jsonwebtoken");
-    const token = jwt.sign(
-      { id: user?.id, walletAddress: user?.walletAddress },
-      process.env.JWT_SECRET || "your_jwt_secret",
-      { expiresIn: "1h" }
+    return NextResponse.json(
+      { message: "Wallet address updated successfully", user: updatedUser },
+      { status: 200 }
     );
-    return NextResponse.json({ token, user }, { status: 200 });
   } catch (error) {
-    console.error("Metamask Authentication Error", error);
+    console.log("Metamask Authentication Error", error);
     return NextResponse.json(
       { error: "Authentication Failed" },
       { status: 500 }
