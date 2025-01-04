@@ -35,6 +35,7 @@ const ConnectWalletButton = () => {
 
   useEffect(() => {
     const sendAccountToBackend = async () => {
+      console.log(account, hasSentToBackend);
       if (account && !hasSentToBackend) {
         try {
           const response = await fetch(`${BASE_API_URL}connect-metamask`, {
