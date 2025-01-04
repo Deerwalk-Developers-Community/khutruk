@@ -3,20 +3,21 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export default async function handler(
+export async function GET(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     if (req.method === 'GET') {
-      const { cid } = req.query;
+        console.log("entry");     
+         const { id } = req.query;
 
-      if (!cid || typeof cid !== 'string') {
+      if (!id || typeof id !== 'string') {
         return res.status(400).json({ error: 'Campaign ID is required and must be a string.' });
       }
 
       const campaign = await prisma.campaign.findUnique({
-        where: { id: cid },
+        where: { id: id },
       });
 
       if (!campaign) {
