@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signup } from "@/domain/repositories/authRepository";
 import { useToast } from "@/hooks/use-toast";
+import useAuthRedirect from "@/hooks/useAuthRedirect";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -13,6 +15,8 @@ type RegisterFormInputs = {
 };
 
 const RegisterForm = () => {
+  useAuthRedirect();
+  const router = useRouter();
   const { toast } = useToast();
   const {
     register,
@@ -29,6 +33,7 @@ const RegisterForm = () => {
         password: data.password,
       });
       window.localStorage.setItem("user", token);
+      router.push('/dashboard')
     } catch (error) {
       console.error("Error: ", error);
     }
