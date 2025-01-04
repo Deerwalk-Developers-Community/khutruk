@@ -1,9 +1,17 @@
 import { BASE_API_URL } from "@/lib/constants";
 
-type AuthCredentials = {
+type LoginCredentials = {
   email: string;
   password: string;
 };
+
+type SignupCredentials = {
+  email: string;
+  password: string;
+  name: string;
+};
+
+type AuthCredentials = LoginCredentials | SignupCredentials;
 
 const fetchAuth = async (
   url: string,
@@ -13,7 +21,7 @@ const fetchAuth = async (
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "applicaiton/json",
+        "Content-Type": "application/json", // Fixed typo
       },
       body: JSON.stringify(credentials),
     });
@@ -22,18 +30,18 @@ const fetchAuth = async (
       throw new Error("Failed");
     }
     const data = await response.json();
-    console.log(data.access_token);
-    return data;
+    console.log(data.token);
+    return data.token;
   } catch (error) {
-    console.error("Error occured: ", error);
+    console.error("Error occurred: ", error);
     throw error;
   }
 };
 
-export const login = async (credentials: AuthCredentials) => {
-  return fetchAuth(`${BASE_API_URL}/auth/login`, credentials);
+export const login = async (credentials: LoginCredentials) => {
+  return fetchAuth(`${BASE_API_URL}/user-login`, credentials);
 };
 
-export const signup = async (credentials: AuthCredentials) => {
-  return fetchAuth(`${BASE_API_URL}/auth/register`, credentials);
+export const signup = async (credentials: SignupCredentials) => {
+  return fetchAuth(`${BASE_API_URL}/create-user`, credentials);
 };
