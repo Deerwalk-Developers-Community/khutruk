@@ -5,50 +5,6 @@ const prisma = new PrismaClient();
 const createResponse = (data: any, status: number) =>
   new Response(JSON.stringify(data), { status });
 
-export async function POST(req: Request) {
-  try {
-    const data = await req.json();
-    const {
-      title,
-      description,
-      targetAmount,
-      category,
-      campaignAddress,
-      mediaUrls,
-      creatorId,
-    } = data;
-
-    if (!title || !description || !targetAmount || !campaignAddress || !creatorId) {
-      return createResponse({ error: "Missing required fields" }, 400);
-    }
-
-    if (category && !Object.values(CategoryTypes).includes(category as CategoryTypes)) {
-      return createResponse({ error: "Invalid category" }, 400);
-    }
-
-    const campaign = await prisma.campaign.create({
-      data: {
-        title,
-        description,
-        targetAmount: parseFloat(targetAmount),
-        category,
-        campaignAddress,
-        mediaUrls,
-        creatorId,
-        status: "PENDING",
-      },
-    });
-
-    return createResponse(
-      { message: "Campaign saved successfully", campaign },
-      201
-    );
-  } catch (error: any) {
-    console.error("Error saving campaign:", error.message, error.stack);
-    return createResponse({ error: "Failed to save campaign" }, 500);
-  }
-}
-
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
