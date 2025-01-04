@@ -6,11 +6,14 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET as string;
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("authorization");
+  const authHeader = req.headers.get("Authorization");
+  console.log(authHeader)
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  console.log("Raw Authorization Header:", authHeader);
+
+if (authHeader == null) {
+  return NextResponse.json({ error: "Invalid Authorization format" }, { status: 401 });
+}
 
   const token = authHeader.split(" ")[1];
 
@@ -31,7 +34,7 @@ export async function GET(req: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name,
-
+          walletAddress: user.walletAddress
         },
       },
       { status: 200 }
