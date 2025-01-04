@@ -1,58 +1,76 @@
-import { NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request, response:Response) {
+export async function POST(req: Request) {
+  let account;
 
-    const { account} = await req.json();
+  try {
+    // Parse the request body
+    const body = await req.json();
+    account = body.account;
 
-    // // Verify the wallet address using the signature and message
-    // const recoveredAddress = ethers.verifyMessage(message, signature);
-
-    // if (recoveredAddress.toLowerCase() !== account.toLowerCase()) {
-    //   return NextResponse.json(
-    //     { error: "Signature Verification Failed" },
-    //     { status: 401 }
-    //   );
-    // }
-
-    // Extract token from Authorization header
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Missing or invalid token" }, { status: 401 });
+    if (!account) {
+      return new Response(JSON.stringify({ error: "Missing account in request body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
-    const token = authHeader.split(" ")[1];
-    console.log(token)
+  } catch (error) {
+    console.error("Request body parsing error:", error);
+    return new Response(JSON.stringify({ error: "Invalid request body" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
+  // Extract token from Authorization header
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Missing or invalid token" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+  let decoded;
+
+  try {
     // Decode the JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your_jwt_secret");
+    decoded = jwt.verify(token, process.env.JWT_SECRET || "your_jwt_secret");
 
     if (!decoded || typeof decoded !== "object" || !decoded.id) {
-      return NextResponse.json(
-        { error: "Invalid or expired token" },
-        { status: 401 }
-      );
+      throw new Error("Invalid or expired token");
     }
-    console.log(account)
-    try {
-    // Update the user's wallet address
+  } catch (error) {
+    console.error("JWT verification error:", error);
+    return new Response(JSON.stringify({ error: "Invalid or expired token" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    // Update the user's wallet address in the database
     const updatedUser = await prisma.user.update({
       where: { id: decoded.id },
       data: { walletAddress: account },
     });
 
-    return NextResponse.json(
-      { message: "Wallet address updated successfully", user: updatedUser },
-      { status: 200 }
+    console.log("User updated successfully:", updatedUser);
+
+    return new Response(
+      JSON.stringify({ message: "Wallet address updated successfully", user: updatedUser }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.log("Metamask Authentication Error", error);
-    return NextResponse.json(
-      { error: "Authentication Failed" },
-      { status: 500 }
-    );
+    console.error("Database operation failed:", error);
+    return new Response(JSON.stringify({ error: "Authentication Failed" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

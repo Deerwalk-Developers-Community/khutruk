@@ -30,23 +30,26 @@ const ConnectWalletButton = () => {
   };
 
   console.log(account);
-  const token = window.localStorage.getItem("user")
-  console.log(token)
+  const token = localStorage.getItem("user");
+  console.log(token);
 
   useEffect(() => {
     const sendAccountToBackend = async () => {
       if (account && !hasSentToBackend) {
         try {
-          const response = await fetch(`${BASE_API_URL}/connect-metamask`, {
+          const response = await fetch(`${BASE_API_URL}connect-metamask`, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ account }),
           });
-          console.log("first: ",response)
+          console.log("first: ", response);
           if (!response.ok) {
             console.error("Failed to send account to backend.");
           }
-          console.log("seconf:",response)
+          console.log("seconf:", response);
           console.log("Account sent to backend successfully!", account);
           setHasSentToBackend(true);
         } catch (error) {
