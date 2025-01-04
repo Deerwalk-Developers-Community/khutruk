@@ -20,11 +20,9 @@ export const createCampaign = async ({ title, description, targetAmount }: any) 
       );
 
       console.log("Transaction hash:", tx.hash);
-
-      // Wait for the transaction to be mined
       const receipt = await tx.wait();
       console.log("Transaction receipt", receipt);
-      const campaignAddress = receipt.logs[0]?.address; // Adjust based on your event logs
+      const campaignAddress = receipt.logs[0]?.address; 
     return { campaignAddress };
       console.log("Campaign created successfully");
     }
