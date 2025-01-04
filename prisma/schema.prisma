@@ -43,8 +43,8 @@ model User {
 model Campaign {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   creatorId       String        @map("creator_id") @db.ObjectId
+  sequenceId      Int           @unique @default(31) @map("sequence_id")
   title           String
-  sequenceId      Int           @unique @default(27) @map("sequence_id")
   description     String
   category        CategoryTypes @map("campaign_category")
   campaignAddress String        @unique @map("campaign_address")

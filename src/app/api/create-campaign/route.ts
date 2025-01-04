@@ -13,7 +13,7 @@ export async function POST(req: any) {
         sequenceId: true,
       },
     });
-    const nextSequenceId = (highestSequenceId?.sequenceId ?? -1) + 1;
+    const nextSequenceId = (highestSequenceId?.sequenceId ?? 31) + 1;
 
     const campaign = await prisma.campaign.create({
       data: {
