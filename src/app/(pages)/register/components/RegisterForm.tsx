@@ -1,29 +1,33 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { login } from "@/domain/repositories/authRepository";
+import { signup } from "@/domain/repositories/authRepository";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type LoginFormInputs = {
+type RegisterFormInputs = {
+  name: string;
   email: string;
   password: string;
 };
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>();
-
-  const onSubmit: SubmitHandler<LoginFormInputs> = async (
-    data: LoginFormInputs
+  } = useForm<RegisterFormInputs>();
+  const onSubmit: SubmitHandler<RegisterFormInputs> = async (
+    data: RegisterFormInputs
   ) => {
     try {
-      const token = await login({ email: data.email, password: data.password });
+      const token = await signup({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
       window.localStorage.setItem("user", token);
     } catch (error) {
       console.error("Error: ", error);
@@ -39,6 +43,19 @@ const LoginForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-5 w-80 border-2 p-5 rounded-md"
       >
+      <div>
+          <label htmlFor="name">Name</label>
+          <Input
+            type="text"
+            placeholder="Name"
+            {...register("name", {
+              required: "Name is required",
+            })}
+          />
+          {errors.name && (
+            <p className="text-red text-sm">{errors.name.message}</p>
+          )}
+        </div>
         <div>
           <label htmlFor="email">Email</label>
           <Input
@@ -79,11 +96,11 @@ const LoginForm = () => {
           disabled={isSubmitting}
           className="bg-green hover:bg-green hover:opacity-80"
         >
-          {isSubmitting ? "Logging In..." : "Log In"}
+          {isSubmitting ? "Registering..." : "Register"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
