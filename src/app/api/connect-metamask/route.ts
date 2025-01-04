@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
   try {
     // Decode the JWT token
-    decoded = jwt.verify(token, process.env.JWT_SECRET || "your_jwt_secret");
+    decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET || "your_jwt_secret");
 
     if (!decoded || typeof decoded !== "object" || !decoded.id) {
       throw new Error("Invalid or expired token");
