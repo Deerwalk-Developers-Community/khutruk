@@ -1,35 +1,34 @@
-import Image from 'next/image'
-import React from 'react'
+import { CategoryTypes } from '@prisma/client'
 
-type Props = {
-    image: string,
-    title: string,
-    raised: string,
-    description: string,
-    category: string
+interface CardProps {
+  image: string
+  title: string
+  raised: string
+  description: string
+  category: CategoryTypes
 }
 
-const Card = ({image, title, raised, description, category}: Props) => {
+export default function Card({ image, title, raised, description, category }: CardProps) {
   return (
-    <div className='w-60 h-fit flex flex-col'>
-        <Image
-            src = {image}
-            width={500}
-            height={500}
-            className='w-full h-32 object-cover rounded-xl'
-            alt = "card-image"
-        />
-        <div>
-            <p>{title}</p>
+    <div className="w-[250px] rounded-xl border bg-card text-card-foreground shadow">
+      <div className="p-6">
+        {image && (
+          <img
+            src={image}
+            alt={title}
+            className="aspect-video w-full rounded-lg object-cover"
+          />
+        )}
+        <div className="space-y-1.5 p-3">
+          <h3 className="text-2xl font-semibold">{title}</h3>
+          <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Raised: ${raised}</span>
+            <span className="text-xs text-muted-foreground">{category}</span>
+          </div>
         </div>
-        <div>
-            <p>Rs. {raised} raised</p>
-        </div>
-        <div className='shadow-md p-1 flex justify-center items-center w-fit text-sm'>
-            {category}
-        </div>
+      </div>
     </div>
   )
 }
 
-export default Card
