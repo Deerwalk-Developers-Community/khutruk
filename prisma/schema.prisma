@@ -46,8 +46,6 @@ model Campaign {
   releasedAmount  Float         @default(0) @map("released_amount")
   status          String
   mediaUrls       String        @map("media_urls")
-  startDate       DateTime      @map("start_date")
-  endDate         DateTime      @map("end_date")
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
