@@ -2,7 +2,11 @@ import { contractAddress } from "@/AddressABI/contractAddress";
 import { DisasterRelifCampaignABI } from "@/AddressABI/DisasterRelifCampaign";
 import { ethers } from "ethers";
 
-export const createCampaign = async ({ title, description, targetAmount }: any) => {
+export const createCampaign = async ({
+  title,
+  description,
+  targetAmount,
+}: any) => {
   try {
     if (typeof window !== "undefined" && window.ethereum) {
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -22,8 +26,8 @@ export const createCampaign = async ({ title, description, targetAmount }: any) 
       console.log("Transaction hash:", tx.hash);
       const receipt = await tx.wait();
       console.log("Transaction receipt", receipt);
-      const campaignAddress = receipt.logs[0]?.address; 
-    return { campaignAddress };
+      const campaignAddress = receipt.logs[0]?.address;
+      return { campaignAddress };
       console.log("Campaign created successfully");
     }
   } catch (err) {

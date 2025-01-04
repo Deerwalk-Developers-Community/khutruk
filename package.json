@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy":"npx hardhat ignition deploy ignition/modules/DisasterRelifCampaign.js --network sepolia"
+    "deploy": "npx hardhat ignition deploy ignition/modules/DisasterRelifCampaign.js --network sepolia"
   },
   "dependencies": {
     "@metamask/sdk-react": "^0.31.4",
     "@prisma/client": "^6.1.0",
     "@radix-ui/react-popover": "^1.1.4",
+    "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
     "bcrypt": "^5.1.1",
@@ -32,9 +33,9 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.7",
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
