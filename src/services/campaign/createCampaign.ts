@@ -1,4 +1,3 @@
-
 import { contractAddress } from "@/AddressABI/contractAddress";
 import { DisasterRelifCampaignABI } from "@/AddressABI/DisasterRelifCampaign";
 import { ethers } from "ethers";
@@ -6,7 +5,6 @@ import { ethers } from "ethers";
 export const createCampaign = async ({ title, description, targetAmount }: any) => {
   try {
     if (typeof window !== "undefined" && window.ethereum) {
-      console.log(window.ethereum);
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const DisasterRelifCampaignContract = new ethers.Contract(
@@ -21,7 +19,9 @@ export const createCampaign = async ({ title, description, targetAmount }: any) 
         ethers.parseEther(targetAmount.toString())
       );
 
-      console.log("Transaction hash: ", tx.hash, "contract address used", contractAddress.address);
+      console.log("Transaction hash:", tx.hash);
+
+      // Wait for the transaction to be mined
       const receipt = await tx.wait();
       console.log("Transaction receipt", receipt);
       const campaignAddress = receipt.logs[0]?.address; // Adjust based on your event logs
@@ -29,6 +29,6 @@ export const createCampaign = async ({ title, description, targetAmount }: any) 
       console.log("Campaign created successfully");
     }
   } catch (err) {
-    console.log(err);
+    console.error("Error creating campaign:", err);
   }
 };
